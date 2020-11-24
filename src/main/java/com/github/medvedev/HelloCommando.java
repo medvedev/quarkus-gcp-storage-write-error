@@ -1,6 +1,9 @@
 package com.github.medvedev;
 
-import com.google.cloud.storage.*;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.BucketInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageClass;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -11,7 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
 @QuarkusMain
 public class HelloCommando implements QuarkusApplication {
@@ -25,6 +27,8 @@ public class HelloCommando implements QuarkusApplication {
         createBucket(bucketName);
         uploadAsBytes(bucketName);
         uploadAsFile(bucketName);
+        System.out.println("To delete bucket  run:\n" +
+                "gsutil rm -r gs://" + bucketName);
         return 0;
     }
 
@@ -42,7 +46,7 @@ public class HelloCommando implements QuarkusApplication {
             storage.createFrom(blobInfo, tempFile);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        };
     }
 
     private void uploadAsBytes(String bucketName) {
@@ -57,19 +61,11 @@ public class HelloCommando implements QuarkusApplication {
 
     void createBucket(String bucketName) {
         System.out.println("Creating bucket: " + bucketName);
-        StorageClass storageClass = StorageClass.COLDLINE;
-
-        // See this documentation for other valid locations:
-        // http://g.co/cloud/storage/docs/bucket-locations#location-mr
-        String location = "EU";
-
-        Bucket bucket =
-                storage.create(
-                        BucketInfo.newBuilder(bucketName)
-                                .setStorageClass(storageClass)
-                                .setLocation(location)
-                                .build());
-
+        storage.create(
+                BucketInfo.newBuilder(bucketName)
+                        .setStorageClass(StorageClass.COLDLINE)
+                        .setLocation("EU")
+                        .build());
     }
 
 }
