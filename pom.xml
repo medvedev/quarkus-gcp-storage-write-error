@@ -39,6 +39,11 @@
       <artifactId>quarkus-google-cloud-storage</artifactId>
       <version>0.2.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.10</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
